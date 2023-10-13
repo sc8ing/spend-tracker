@@ -6,8 +6,7 @@
    [ring.middleware.keyword-params :refer [wrap-keyword-params]]
    [ring.middleware.params :refer [wrap-params]]
    [ring.middleware.resource :refer [wrap-resource]]
-   [spend-tracker.htmx :as htmx]
-   [spend-tracker.backend :as backend])
+   [spend-tracker.htmx :as htmx])
   (:gen-class))
 
 (compojure/defroutes app-routes

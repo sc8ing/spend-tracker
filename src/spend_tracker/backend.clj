@@ -10,5 +10,6 @@
   [input]
   (let [existing-cats ["food" "lodging" "travel" "foraging"]]
     (for [cat existing-cats
-          :when (and (string/starts-with? cat input) (not (string/blank? input)))]
+          :when (and (string/starts-with? cat input)
+                     (not (string/blank? input)))]
       cat)))
