@@ -17,7 +17,6 @@
      content]))
 
 (defn record-txn-input [prefilled]
-  (println "prefilled was" prefilled)
   (h/html
    [:div#record-txn-input [:form {:method "post"
                                   :action "htmx/transaction"
@@ -48,7 +47,8 @@
   (h/html
     [:ul (map (fn [i] (h/html [:li {:hx-target "#record-txn-input"
                                     :hx-get "htmx/record-txn-input"
-                                    :hx-vals (json/write-str {:category i})}
+                                    :hx-vals (json/write-str {:category i})
+                                    :hx-include "input"}
                                i]))
               (backend/get-matching-categories category))]))
 
