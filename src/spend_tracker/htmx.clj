@@ -1,22 +1,11 @@
 (ns spend-tracker.htmx
-  (:require [compojure.core :as compojure]
-            [compojure.route :as route]
-            [hiccup2.core :as h]
-            [clojure.string :as string]))
+  (:require
+   [compojure.core :as compojure]
+   [compojure.route :as route]
+   [hiccup2.core :as h]
+   [spend-tracker.backend :as backend]))
 
-(defn- matching-categories
-  "Find existing categories based on the input so far"
-  [input]
-  (let [existing-cats ["food" "lodging" "travel" "foraging"]]
-    (for [cat existing-cats
-          :when (and (string/starts-with? cat input) (not (string/blank? input)))]
-      cat)))
-
-(defn possible-categories [{:keys [category]}]
-  (h/html
-    [:ul (map (fn [i] (h/html [:li i])) (matching-categories category))]))
-
-(defn in-page [content &{:keys [title] :or {title "Spend Tracker"}}]
+(defn wrap-in-main-page [content &{:keys [title] :or {title "Spend Tracker"}}]
   (h/html
     [:head
       [:title "Spend Tracker"]
@@ -29,17 +18,17 @@
 (def record-txn-input
   (h/html
    [:div [:form {:method "post"
-                 :action "rest/transaction"
-                 :hx-post "rest/transaction"}
+                 :action "htmx/transaction"
+                 :hx-post "htmx/transaction"}
           [:input {:type "number"
                    :name "amount"}]
           [:div
            [:input {:type "text"
                     :name "category"
-                    :hx-get "htmx/category"
-                    :hx-target "#possible-categories"
+                    :hx-get "htmx/matching-categories"
+                    :hx-target "#matching-categories"
                     :hx-trigger "keyup changed delay:500ms"}]
-           [:div#possible-categories.completion]]
+           [:div#matching-categories.completion]]
           [:input {:type "submit"
                    :value "Add"}]]]))
 
@@ -47,10 +36,15 @@
   {:status 200
    :headers {"Content-Type" "text/html"}
    :body (-> record-txn-input
-             (in-page {:title "Record Transaction"})
+             (wrap-in-main-page {:title "Record Transaction"})
              str)})
 
+(defn matching-categories [{:keys [category]}]
+  (h/html
+    [:ul (map (fn [i] (h/html [:li i]))
+              (backend/get-matching-categories category))]))
+
 (compojure/defroutes routes
-  (compojure/GET "/category" {params :params} (str (possible-categories params)))
+  (compojure/GET "/matching-categories" {params :params} (str (matching-categories params)))
   (route/not-found "Not Found"))
 

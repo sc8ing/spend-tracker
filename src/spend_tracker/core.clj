@@ -7,12 +7,11 @@
    [ring.middleware.params :refer [wrap-params]]
    [ring.middleware.resource :refer [wrap-resource]]
    [spend-tracker.htmx :as htmx]
-   [spend-tracker.rest :as rest])
+   [spend-tracker.backend :as backend])
   (:gen-class))
 
 (compojure/defroutes app-routes
   (compojure/GET "/" _ htmx/root-page)
-  (compojure/context "/rest" [] rest/routes)
   (compojure/context "/htmx" [] htmx/routes)
   (route/not-found "Not Found"))
 
