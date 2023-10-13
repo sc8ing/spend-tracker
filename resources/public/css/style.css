@@ -1,0 +1,14 @@
+body {
+    text-align: center;
+}
+.completion {
+    border: 1px solid black;
+}
+.completion ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.completion ul li {
+    border: 1px solid black;
+}

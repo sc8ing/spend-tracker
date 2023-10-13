@@ -39,7 +39,7 @@
                     :hx-get "htmx/category"
                     :hx-target "#possible-categories"
                     :hx-trigger "keyup changed delay:500ms"}]
-           [:div#possible-categories]]
+           [:div#possible-categories.completion]]
           [:input {:type "submit"
                    :value "Add"}]]]))
 
